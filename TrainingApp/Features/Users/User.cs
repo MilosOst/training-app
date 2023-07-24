@@ -1,16 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TrainingApp.Features.Users;
 
 public class User
 {
-    // TODO: Consider changing this to string and label column as uuid?
     [Key, Required]
     public Guid Id { get; set; }
 
     [Required]
-    [MinLength(6, ErrorMessage = "Username must be between 6 and 25 characters long.")]
     [MaxLength(25, ErrorMessage = "Username must be between 6 and 25 characters long.")]
     [RegularExpression(@"^\w+$",
         ErrorMessage = "Username must consist of only underscores and alphanumeric characters.")]
@@ -21,7 +20,8 @@ public class User
     public string Email { get; set; } = null!;
 
     [Required]
-    public string Password { get; set; } = null!;
+    [JsonIgnore]
+    public string Password { get; private set; } = null!;
 
     [Required]
     public bool IsVerified { get; set; } = false;
