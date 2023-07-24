@@ -1,11 +1,26 @@
+using Microsoft.EntityFrameworkCore;
+using TrainingApp.Data;
+using TrainingApp.Features.Authentication;
+using TrainingApp.Middleware;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+DotNetEnv.Env.Load();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddLogging();
+
+builder.Services.AddTransient<GlobalExceptionMiddlewareHandler>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+builder.Services.AddEntityFrameworkNpgsql().AddDbContext<DataContext>(opt
+    => opt.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
 
 var app = builder.Build();
 
@@ -17,6 +32,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<GlobalExceptionMiddlewareHandler>();
 
 app.UseAuthorization();
 
