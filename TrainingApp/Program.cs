@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using TrainingApp.Data;
 using TrainingApp.Features.Authentication;
@@ -16,6 +17,17 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddLogging();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "sessionId";
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.EventsType = typeof(CookieSessionValidationMiddleware);
+
+    });
+
+builder.Services.AddScoped<CookieSessionValidationMiddleware>();
 builder.Services.AddTransient<GlobalExceptionMiddlewareHandler>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
@@ -35,6 +47,7 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<GlobalExceptionMiddlewareHandler>();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

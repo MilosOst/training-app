@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TrainingApp.Features.Authentication.Models;
 using TrainingApp.Features.Users;
 
 namespace TrainingApp.Data;
@@ -24,4 +25,5 @@ public class DataContext: DbContext
     }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<UserSession> UserSessions { get; set; }
 }

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TrainingApp.Features.Users;
+namespace TrainingApp.Features.Authentication.Models;
 
 public class RegisterUserRequest
 {
@@ -15,6 +15,6 @@ public class RegisterUserRequest
     public string Email { get; set; }
 
     [Required]
-    [MinLength(8, ErrorMessage = "Username must be at least 8 characters long.")]
+    [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
     public string Password { get; set; }
 }

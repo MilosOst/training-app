@@ -1,5 +1,6 @@
 using System.Text.Json;
-using TrainingApp.Errors;
+using TrainingApp.APIResponses;
+using TrainingApp.Exceptions;
 
 namespace TrainingApp.Middleware;
 
@@ -33,16 +34,20 @@ public class GlobalExceptionMiddlewareHandler: IMiddleware
 
         switch (ex)
         {
+            case UnauthorizedException:
+                statusCode = 401;
+                message = ex.Message;
+                break;
             case ConflictException:
                 statusCode = 409;
                 message = ex.Message;
                 break;
-        };
+        }
 
         context.Response.StatusCode = statusCode;
         context.Response.ContentType = "application/json";
         
-        var body = new { message = message };
+        MessageResponse body = new () { Message = message };
         string json = JsonSerializer.Serialize(body);
         await context.Response.WriteAsync(json);
     }
