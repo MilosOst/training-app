@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using TrainingApp.Features.Authentication.Models;
+using TrainingApp.Features.Trainings;
 
 namespace TrainingApp.Features.Users;
 
@@ -27,7 +28,7 @@ public class User
     public bool IsVerified { get; set; } = false;
     
     public ICollection<UserSession> UserSessions { get; set; }
-
+    public ICollection<UserTraining> UserTrainings { get; set; }
     public void SetPassword(string password)
     {
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
