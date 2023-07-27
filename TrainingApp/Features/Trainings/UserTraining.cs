@@ -5,8 +5,12 @@ using TrainingApp.Features.Users;
 
 namespace TrainingApp.Features.Trainings;
 
+public enum AgeGroup
+{
+    U10, U11, U12, U13, U14, U15, U16, U17, U18, U19
+}
 
-    [Table("UserTraining")]
+[Table("UserTraining")]
 public class UserTraining
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -15,7 +19,7 @@ public class UserTraining
     
     [Required]
     [Column("AgeGroup")]
-    public string Age { get; set; } = String.Empty;
+    public AgeGroup Age { get; set; }
     
     [Required]
     [Column("Date")]

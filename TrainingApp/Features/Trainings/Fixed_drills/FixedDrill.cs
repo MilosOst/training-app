@@ -5,6 +5,10 @@ using TrainingApp.Features.Trainings.UserTrainingDrills;
 namespace TrainingApp.Features.Trainings.Fixed_drills;
 
 
+public enum Category{
+    Defense, Transition, Passing, Screening, DecisionMaking, Sets
+}
+
     [Table("FixedDrills")]
 public class FixedDrill
 {
@@ -17,7 +21,7 @@ public class FixedDrill
     public string Name { get; set; } = string.Empty;
     
     [Column("category"), Required]
-    public string Category { get; set; } = String.Empty;
+    public Category Category { get; set; }
     
     public ICollection<UserTrainingDrill> UserTrainingDrills { get; set; }
 }
