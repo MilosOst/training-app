@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TrainingApp.APIResponses;
 using TrainingApp.Features.Authentication.Models;
@@ -41,5 +42,15 @@ public class AuthenticationController: ControllerBase
             new ClaimsPrincipal(claimsIdentity)); 
         
         return Ok(new MessageResponse() { Message = "You have successfully logged in." });
+    }
+
+    [HttpGet("session")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    // Use this route to verify session is still valid / persistent login
+    public async Task<ActionResult> VerifySession()
+    {
+        return Ok();
     }
 }
