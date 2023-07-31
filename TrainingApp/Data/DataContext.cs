@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainingApp.Features.Authentication.Models;
 using TrainingApp.Features.Trainings;
 using TrainingApp.Features.Trainings.Fixed_drills;
@@ -25,7 +26,23 @@ public class DataContext: DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserEntityTypeConfiguration).Assembly);
+        
+        var converter = new EnumToStringConverter<AgeGroup>();
+
+        modelBuilder
+            .Entity<UserTraining>()
+            .Property(e => e.Age)
+            .HasConversion(converter);
+        
+        var converter2 = new EnumToStringConverter<Category>();
+
+        modelBuilder
+            .Entity<FixedDrill>()
+            .Property(e => e.Category)
+            .HasConversion(converter2);
+        
     }
+    
 
     public DbSet<User> Users { get; set; }
     public DbSet<UserSession> UserSessions { get; set; }

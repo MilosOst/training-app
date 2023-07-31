@@ -18,7 +18,7 @@ public class CreateTrainingRequest
 public class UserTrainingDrillInput {
     
     [Required]
-    [Range(30, int.MaxValue)]
+    [Range(1, 99)]
     public int Duration { get; set; }
     
     [Required]

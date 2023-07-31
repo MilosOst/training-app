@@ -12,7 +12,7 @@ public class UserTrainingDrill
     public int UserTrainingDrillId { get; set; }
     
     // maybe change maxvalue to one hour
-    [Range(30, int.MaxValue)]
+    [Range(1, 99)]
     [Column("duration"), Required]
     public int Duration { get; set; }
     
