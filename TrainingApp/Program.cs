@@ -1,8 +1,10 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using TrainingApp.Data;
 using TrainingApp.Features.Authentication;
 using TrainingApp.Features.Trainings;
+using TrainingApp.Features.Trainings.FixedDrills;
 using TrainingApp.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -29,9 +35,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddScoped<CookieSessionValidationMiddleware>();
+builder.Services.AddScoped<RequestLoggingMiddleware>();
 builder.Services.AddTransient<GlobalExceptionMiddlewareHandler>();
+
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ITrainingService, TrainingService>();
+builder.Services.AddScoped<IFixedDrillsService, FixedDrillsService>();
 
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<DataContext>(opt
     => opt.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
@@ -47,6 +56,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<GlobalExceptionMiddlewareHandler>();
 
 app.UseAuthentication();

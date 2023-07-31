@@ -20,7 +20,7 @@ public class TrainingsController: ControllerBase
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> CreateTraining(CreateTrainingRequest req)
+    public async Task<ActionResult> CreateTraining([FromBody] CreateTrainingRequest req)
     {
         await _trainingService.RegisterTraining(req, HttpContext.GetUserId());
         return NoContent();

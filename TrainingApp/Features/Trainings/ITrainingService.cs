@@ -5,6 +5,4 @@ namespace TrainingApp.Features.Trainings;
 public interface ITrainingService
 {
     Task RegisterTraining(CreateTrainingRequest req, string userId);
-
-
 }

@@ -7,12 +7,11 @@ public class CreateTrainingRequest
     [Required]
     public AgeGroup Age { get; set; }
     
-    // no tarinings before todays date
     [Required]
     public DateOnly ScheduledDate { get; set; }
     
     [Required]
-    public UserTrainingDrillInput[] DrillInputs { get; set; }
+    public List<UserTrainingDrillInput> Drills { get; set; }
 }
 
 public class UserTrainingDrillInput {
@@ -23,6 +22,4 @@ public class UserTrainingDrillInput {
     
     [Required]
     public int DrillId { get; set; }
-    
-    
 }
