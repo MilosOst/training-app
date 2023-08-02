@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainingApp.Features.Authentication.Models;
 using TrainingApp.Features.Trainings;
-using TrainingApp.Features.Trainings.Fixed_drills;
+using TrainingApp.Features.Trainings.FixedDrills;
 using TrainingApp.Features.Trainings.UserTrainingDrills;
 using TrainingApp.Features.Users;
 

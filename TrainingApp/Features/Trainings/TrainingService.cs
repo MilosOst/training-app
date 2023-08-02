@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TrainingApp.Data;
+using TrainingApp.Exceptions;
 using TrainingApp.Features.Trainings.Models;
 using TrainingApp.Features.Trainings.UserTrainingDrills;
 
@@ -18,19 +19,30 @@ public class TrainingService: ITrainingService
     public async Task RegisterTraining(CreateTrainingRequest req, string userId)
     {
         List<UserTrainingDrill> userTrainingDrills = new List<UserTrainingDrill>();
-        foreach (var drill in req.DrillInputs)
-        { 
-            //check validation
-            UserTrainingDrill userTrainingDrill = new UserTrainingDrill
+        Dictionary<string, List<String>> validationErrors = new Dictionary<string, List<string>>();
+
+        for (int i = 0; i < req.Drills.Count; i++)
+        {
+            var drill = req.Drills[i];
+            if (!_db.FixedDrills.Any(p => p.FixedDrillId == drill.DrillId))
+            {
+                validationErrors[$"Drills[{i}].DrillId"] = new List<string>() { "Invalid DrillId" };
+            }
+
+            userTrainingDrills.Add(new UserTrainingDrill()
             {
                 Duration = drill.Duration,
-                DrillId = drill.DrillId,
-                
-            };
-            
-            userTrainingDrills.Add(userTrainingDrill);
+                DrillId = drill.DrillId
+            });
+        }
+        
+        // Check if any validationErrors occured
+        if (validationErrors.Count > 0)
+        {
+            throw new BadRequestException(validationErrors);
         }
 
+        
         var newTraining = new UserTraining()
         {
             Age = req.Age,
@@ -41,7 +53,6 @@ public class TrainingService: ITrainingService
         
         _db.UserTrainings.Add(newTraining);
         await _db.SaveChangesAsync();
-        
     }
 
     public async Task<List<SendTraining>> TrainingHistory(CreateDateRequest req, string userId)

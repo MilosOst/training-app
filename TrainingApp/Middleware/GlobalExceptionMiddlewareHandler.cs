@@ -34,6 +34,14 @@ public class GlobalExceptionMiddlewareHandler: IMiddleware
 
         switch (ex)
         {
+            case BadRequestException badRequestEx:
+                var response = new BadRequestResponse() { Errors = badRequestEx.Errors };
+                string errorsJson = JsonSerializer.Serialize(response);
+                
+                context.Response.StatusCode = 400;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(errorsJson);
+                return;
             case UnauthorizedException:
                 statusCode = 401;
                 message = ex.Message;

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TrainingApp.Features.Trainings.Fixed_drills;
+using TrainingApp.Features.Trainings.FixedDrills;
 
 namespace TrainingApp.Features.Trainings.UserTrainingDrills;
 
