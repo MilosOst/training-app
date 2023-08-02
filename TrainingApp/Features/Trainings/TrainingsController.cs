@@ -26,4 +26,10 @@ public class TrainingsController: ControllerBase
         return NoContent();
     }
     
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> GetTraining(CreateDateRequest req)
+    {
+        return Ok(await _trainingService.TrainingHistory(req, HttpContext.GetUserId()));
+    }
 }

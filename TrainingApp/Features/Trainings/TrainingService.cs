@@ -42,15 +42,27 @@ public class TrainingService: ITrainingService
         _db.UserTrainings.Add(newTraining);
         await _db.SaveChangesAsync();
         
-        // foreach (var drill in newTraining.UserTrainingDrills)
-        // {
-        //     drill.TrainingId = newTraining.Id;
-        // }
-        //
-        // await _db.SaveChangesAsync();
-        
-        
     }
 
+    public async Task<List<SendTraining>> TrainingHistory(CreateDateRequest req, string userId)
+    {
 
+        var list = await _db.UserTrainings
+            .Where(p => p.UserId.ToString() == userId &&
+                        p.Date == req.ScheduledDate)
+            .OrderBy(p=>p.Date)
+            .Take(10)
+            .Include(p=>p.UserTrainingDrills)
+            .Select(p=>new SendTraining
+            {
+                Age = p.Age,
+                Date = p.Date,
+                UserTrainingDrills = p.UserTrainingDrills
+            })
+            .ToListAsync();
+        
+        return list;
+        
+
+    }
 }
