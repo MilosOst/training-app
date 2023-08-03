@@ -7,7 +7,7 @@ using TrainingApp.Features.Trainings.UserTrainingDrills;
 namespace TrainingApp.Features.Trainings;
 
 
-public class TrainingService: ITrainingService
+public class TrainingService : ITrainingService
 {
     private readonly DataContext _db;
 
@@ -35,14 +35,14 @@ public class TrainingService: ITrainingService
                 DrillId = drill.DrillId
             });
         }
-        
+
         // Check if any validationErrors occured
         if (validationErrors.Count > 0)
         {
             throw new BadRequestException(validationErrors);
         }
 
-        
+
         var newTraining = new UserTraining()
         {
             Age = req.Age,
@@ -50,30 +50,30 @@ public class TrainingService: ITrainingService
             UserTrainingDrills = userTrainingDrills,
             UserId = new Guid(userId)
         };
-        
+
         _db.UserTrainings.Add(newTraining);
         await _db.SaveChangesAsync();
     }
 
-    public async Task<List<SendTraining>> TrainingHistory(CreateDateRequest req, string userId)
+    public async Task<List<UserTrainingDto>> GetTrainingHistory(DateOnly forDate, string userId)
     {
-
-        var list = await _db.UserTrainings
-            .Where(p => p.UserId.ToString() == userId &&
-                        p.Date == req.ScheduledDate)
-            .OrderBy(p=>p.Date)
-            .Take(10)
-            .Include(p=>p.UserTrainingDrills)
-            .Select(p=>new SendTraining
+        return await _db.UserTrainings
+            .Where(p => p.UserId.ToString() == userId && p.Date == forDate)
+            .OrderByDescending(p => p.TrainingId)
+            .Include(ut => ut.UserTrainingDrills)
+            .ThenInclude(utd => utd.FixedDrill)
+            .Select(ut => new UserTrainingDto()
             {
-                Age = p.Age,
-                Date = p.Date,
-                UserTrainingDrills = p.UserTrainingDrills
+                Id = ut.TrainingId,
+                AgeGroup = ut.Age,
+                Drills = ut.UserTrainingDrills.Select(drill => new UserTrainingDrillDto()
+                {
+                    Duration = drill.Duration,
+                    Id = drill.DrillId,
+                    Name = drill.FixedDrill.Name,
+                    Category = drill.FixedDrill.Category
+                }).ToList()
             })
             .ToListAsync();
-        
-        return list;
-        
-
     }
 }

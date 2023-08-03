@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TrainingApp.APIResponses;
 using TrainingApp.Extensions;
 using TrainingApp.Features.Trainings.Models;
 
@@ -9,6 +10,8 @@ namespace TrainingApp.Features.Trainings;
 [ApiController]
 [Route("trainings")]
 [Authorize]
+[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestResponse))]
+[ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(MessageResponse))]
 public class TrainingsController: ControllerBase
 {
     private readonly ITrainingService _trainingService;
@@ -27,9 +30,10 @@ public class TrainingsController: ControllerBase
     }
     
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> GetTraining(CreateDateRequest req)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserTrainingDto>))]
+    public async Task<ActionResult> GetTraining([FromQuery] DateTime date)
     {
-        return Ok(await _trainingService.TrainingHistory(req, HttpContext.GetUserId()));
+        var trainings = await _trainingService.GetTrainingHistory(DateOnly.FromDateTime(date), HttpContext.GetUserId());
+        return Ok(trainings);
     }
 }
