@@ -14,6 +14,7 @@ public class UserTrainingDto
 public class UserTrainingDrillDto
 {
     public int Id { get; set; }
+    public int FixedDrillId { get; set; }
     public int Duration { get; set; }
     public string Name { get; set; } = string.Empty;
     public Category Category { get; set; }

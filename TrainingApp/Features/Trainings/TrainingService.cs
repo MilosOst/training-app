@@ -71,7 +71,8 @@ public class TrainingService : ITrainingService
                     Duration = drill.Duration,
                     Id = drill.DrillId,
                     Name = drill.FixedDrill.Name,
-                    Category = drill.FixedDrill.Category
+                    Category = drill.FixedDrill.Category,
+                    FixedDrillId = drill.FixedDrill.FixedDrillId
                 }).ToList()
             })
             .ToListAsync();

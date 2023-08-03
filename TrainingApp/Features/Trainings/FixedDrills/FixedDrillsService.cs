@@ -14,6 +14,6 @@ public class FixedDrillsService: IFixedDrillsService
 
     public async Task<List<FixedDrill>> GetFixedDrills()
     {
-        return await _db.FixedDrills.ToListAsync();
+        return await _db.FixedDrills.OrderBy(d => d.Name).ToListAsync();
     }
 }
