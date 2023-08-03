@@ -40,7 +40,6 @@ public class DataContext: DbContext
             .Entity<FixedDrill>()
             .Property(e => e.Category)
             .HasConversion(converter2);
-        
     }
     
 
