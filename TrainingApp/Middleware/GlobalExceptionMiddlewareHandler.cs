@@ -50,6 +50,14 @@ public class GlobalExceptionMiddlewareHandler: IMiddleware
                 statusCode = 409;
                 message = ex.Message;
                 break;
+            case NotFoundException:
+                statusCode = 404;
+                message = ex.Message;
+                break;
+            case ForbiddenException:
+                statusCode = 403;
+                message = ex.Message;
+                break;
         }
 
         context.Response.StatusCode = statusCode;

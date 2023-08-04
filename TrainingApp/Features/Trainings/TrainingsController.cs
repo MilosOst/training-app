@@ -36,4 +36,22 @@ public class TrainingsController: ControllerBase
         var trainings = await _trainingService.GetTrainingHistory(DateOnly.FromDateTime(date), HttpContext.GetUserId());
         return Ok(trainings);
     }
+    
+    [HttpPut("{id}")]
+    
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> UpdateTraining(CreateTrainingRequest req, int id)
+    {
+        await _trainingService.UpdateTraining(req, HttpContext.GetUserId(), id);
+        return NoContent();
+    }
+    
+    [HttpDelete("{id}")]
+    
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> DeleteTraining(int id)
+    {
+        await _trainingService.DeleteTraining(HttpContext.GetUserId(), id);
+        return NoContent();
+    }
 }
