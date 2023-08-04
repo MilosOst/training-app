@@ -27,9 +27,28 @@ public class TrainingsController: ControllerBase
     }
     
     [HttpGet]
+    
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> GetTraining(CreateDateRequest req)
     {
         return Ok(await _trainingService.TrainingHistory(req, HttpContext.GetUserId()));
+    }
+    
+    [HttpPut("{id}")]
+    
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> UpdateTraining(CreateTrainingRequest req, int id)
+    {
+        await _trainingService.UpdateTraining(req, HttpContext.GetUserId(), id);
+        return NoContent();
+    }
+    
+    [HttpDelete("{id}")]
+    
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> DeleteTraining(int id)
+    {
+        await _trainingService.DeleteTraining(HttpContext.GetUserId(), id);
+        return NoContent();
     }
 }

@@ -76,4 +76,80 @@ public class TrainingService: ITrainingService
         
 
     }
+    public async Task UpdateTraining(CreateTrainingRequest req, string userId, int TrainingID)
+    {
+        var user = await _db.UserTrainings
+                .Include(x => x.UserTrainingDrills)
+            .FirstOrDefaultAsync(p => p.TrainingId == TrainingID);
+
+
+        if (user == null)
+        {
+            throw new NotFoundException("This does not exist.");
+        } 
+
+        if (user.UserId.ToString() != userId)
+        {
+            throw new ForbiddenException("You do not have access to do this.");
+        }
+        
+        List<UserTrainingDrill> newUserTrainingDrills = new List<UserTrainingDrill>();
+        Dictionary<string, List<String>> validationErrors = new Dictionary<string, List<string>>();
+
+        for (int i = 0; i < req.Drills.Count; i++)
+        {
+            var drill = req.Drills[i];
+            if (!_db.FixedDrills.Any(p => p.FixedDrillId == drill.DrillId))
+            {
+                validationErrors[$"Drills[{i}].DrillId"] = new List<string>() { "Invalid DrillId" };
+            }
+
+            newUserTrainingDrills.Add(new UserTrainingDrill()
+            {
+                Duration = drill.Duration,
+                DrillId = drill.DrillId
+            });
+        }
+        
+        if (validationErrors.Count > 0)
+        {
+            throw new BadRequestException(validationErrors);
+        }
+        
+        _db.UserTrainingDrills.RemoveRange(user.UserTrainingDrills);
+        user.UserTrainingDrills.Clear();
+        
+        user.Age = req.Age;
+        user.Date = req.ScheduledDate;
+        user.UserTrainingDrills = newUserTrainingDrills;
+        
+        await _db.SaveChangesAsync();
+        
+    }
+
+    public async Task DeleteTraining(string userId, int TrainingID)
+    {
+        var training = await _db.UserTrainings
+            .Include((Ut => Ut.UserTrainingDrills))
+            .FirstOrDefaultAsync(p => p.TrainingId == TrainingID);
+
+        if (training == null)
+        {
+            throw new NotFoundException("This does not exist.");
+        }
+
+        if (training.UserId.ToString() != userId)
+        {
+            throw new ForbiddenException("You do not have access to do this.");
+        }
+
+
+        _db.UserTrainingDrills.RemoveRange(training.UserTrainingDrills);
+
+        _db.UserTrainings.Remove(training);
+        
+        await _db.SaveChangesAsync();
+        
+        
+    }
 }
