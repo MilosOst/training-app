@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TrainingApp.Validation;
 
 namespace TrainingApp.Features.Trainings.Models;
 
@@ -8,6 +9,7 @@ public class CreateTrainingRequest
     public AgeGroup Age { get; set; }
     
     [Required]
+    [ValidDateOnly]
     public DateOnly ScheduledDate { get; set; }
     
     [Required]

@@ -66,6 +66,7 @@ public class TrainingService : ITrainingService
             {
                 Id = ut.TrainingId,
                 AgeGroup = ut.Age,
+                ScheduledDate = ut.Date,
                 Drills = ut.UserTrainingDrills.Select(drill => new UserTrainingDrillDto()
                 {
                     Duration = drill.Duration,
@@ -77,19 +78,19 @@ public class TrainingService : ITrainingService
             })
             .ToListAsync();
     }
-    public async Task UpdateTraining(CreateTrainingRequest req, string userId, int TrainingID)
+    public async Task<UserTrainingDto> UpdateTraining(CreateTrainingRequest req, string userId, int trainingId)
     {
-        var user = await _db.UserTrainings
-                .Include(x => x.UserTrainingDrills)
-            .FirstOrDefaultAsync(p => p.TrainingId == TrainingID);
+        var training = await _db.UserTrainings
+            .Include(x => x.UserTrainingDrills)
+            .FirstOrDefaultAsync(p => p.TrainingId == trainingId);
 
 
-        if (user == null)
+        if (training == null)
         {
             throw new NotFoundException("This does not exist.");
         } 
 
-        if (user.UserId.ToString() != userId)
+        if (training.UserId.ToString() != userId)
         {
             throw new ForbiddenException("You do not have access to do this.");
         }
@@ -117,22 +118,42 @@ public class TrainingService : ITrainingService
             throw new BadRequestException(validationErrors);
         }
         
-        _db.UserTrainingDrills.RemoveRange(user.UserTrainingDrills);
-        user.UserTrainingDrills.Clear();
+        _db.UserTrainingDrills.RemoveRange(training.UserTrainingDrills);
+        training.UserTrainingDrills.Clear();
         
-        user.Age = req.Age;
-        user.Date = req.ScheduledDate;
-        user.UserTrainingDrills = newUserTrainingDrills;
+        training.Age = req.Age;
+        training.Date = req.ScheduledDate;
+        training.UserTrainingDrills = newUserTrainingDrills;
         
         await _db.SaveChangesAsync();
-        
+
+        await _db.Entry(training)
+            .Collection(ut => ut.UserTrainingDrills)
+            .Query()
+            .Include(d => d.FixedDrill)
+            .LoadAsync();
+
+        return new UserTrainingDto()
+        {
+            Id = training.TrainingId,
+            AgeGroup = training.Age,
+            ScheduledDate = training.Date,
+            Drills = training.UserTrainingDrills.Select(drill => new UserTrainingDrillDto()
+            {
+                Duration = drill.Duration,
+                Id = drill.DrillId,
+                Name = drill.FixedDrill.Name,
+                Category = drill.FixedDrill.Category,
+                FixedDrillId = drill.FixedDrill.FixedDrillId
+            }).ToList()
+        };
     }
 
-    public async Task DeleteTraining(string userId, int TrainingID)
+    public async Task DeleteTraining(string userId, int trainingId)
     {
         var training = await _db.UserTrainings
             .Include((Ut => Ut.UserTrainingDrills))
-            .FirstOrDefaultAsync(p => p.TrainingId == TrainingID);
+            .FirstOrDefaultAsync(p => p.TrainingId == trainingId);
 
         if (training == null)
         {

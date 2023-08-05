@@ -38,17 +38,19 @@ public class TrainingsController: ControllerBase
     }
     
     [HttpPut("{id}")]
-    
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> UpdateTraining(CreateTrainingRequest req, int id)
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserTrainingDto))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(MessageResponse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(MessageResponse))]
+    public async Task<ActionResult<UserTrainingDto>> UpdateTraining(CreateTrainingRequest req, int id)
     {
-        await _trainingService.UpdateTraining(req, HttpContext.GetUserId(), id);
-        return NoContent();
+        var training = await _trainingService.UpdateTraining(req, HttpContext.GetUserId(), id);
+        return Created("", training);
     }
     
     [HttpDelete("{id}")]
-    
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(MessageResponse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(MessageResponse))]
     public async Task<ActionResult> DeleteTraining(int id)
     {
         await _trainingService.DeleteTraining(HttpContext.GetUserId(), id);
