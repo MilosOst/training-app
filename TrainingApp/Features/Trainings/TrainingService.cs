@@ -70,7 +70,7 @@ public class TrainingService : ITrainingService
                 Drills = ut.UserTrainingDrills.Select(drill => new UserTrainingDrillDto()
                 {
                     Duration = drill.Duration,
-                    Id = drill.DrillId,
+                    Id = drill.UserTrainingDrillId,
                     Name = drill.FixedDrill.Name,
                     Category = drill.FixedDrill.Category,
                     FixedDrillId = drill.FixedDrill.FixedDrillId
@@ -141,7 +141,7 @@ public class TrainingService : ITrainingService
             Drills = training.UserTrainingDrills.Select(drill => new UserTrainingDrillDto()
             {
                 Duration = drill.Duration,
-                Id = drill.DrillId,
+                Id = drill.UserTrainingDrillId,
                 Name = drill.FixedDrill.Name,
                 Category = drill.FixedDrill.Category,
                 FixedDrillId = drill.FixedDrill.FixedDrillId
