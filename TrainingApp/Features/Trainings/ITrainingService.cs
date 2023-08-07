@@ -8,7 +8,7 @@ public interface ITrainingService
 
     Task<List<UserTrainingDto>> GetTrainingHistory(DateOnly forDate, string userId);
 
-    Task UpdateTraining(CreateTrainingRequest req, string userId, int TrainingId);
+    Task<UserTrainingDto> UpdateTraining(CreateTrainingRequest req, string userId, int trainingId);
 
-    Task DeleteTraining(string userId, int TrainingId);
+    Task DeleteTraining(string userId, int trainingId);
 }

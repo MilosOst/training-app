@@ -1,6 +1,4 @@
-﻿using TrainingApp.Features.Trainings.UserTrainingDrills;
-using TrainingApp.Migrations;
-using Category = TrainingApp.Features.Trainings.FixedDrills.Category;
+﻿using Category = TrainingApp.Features.Trainings.FixedDrills.Category;
 
 namespace TrainingApp.Features.Trainings.Models;
 
@@ -8,6 +6,7 @@ public class UserTrainingDto
 {
     public int Id { get; set; }
     public AgeGroup AgeGroup { get; set; }
+    public DateOnly ScheduledDate { get; set; }
     public List<UserTrainingDrillDto> Drills { get; set; }
 }
 
