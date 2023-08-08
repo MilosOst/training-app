@@ -17,4 +17,8 @@ public class RegisterUserRequest
     [Required]
     [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
     public string Password { get; set; }
+    
+    [Required]
+    [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
+    public string PasswordConfirmation { get; set; }
 }
