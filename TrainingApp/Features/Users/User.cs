@@ -29,6 +29,8 @@ public class User
     
     public ICollection<UserSession> UserSessions { get; set; }
     public ICollection<UserTraining> UserTrainings { get; set; }
+    public ICollection<PasswordResetToken> PasswordResetTokens { get; set; }
+
     public void SetPassword(string password)
     {
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);

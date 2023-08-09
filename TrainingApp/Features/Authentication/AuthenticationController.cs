@@ -53,4 +53,24 @@ public class AuthenticationController: ControllerBase
     {
         return Ok();
     }
+
+    [HttpPost("forgot-password")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MessageResponse))]
+    public async Task<ActionResult<MessageResponse>> RequestPasswordReset(RequestPasswordResetRequest req)
+    {
+        await _authenticationService.RequestPasswordReset(req.Email);
+        MessageResponse msg = new()
+        {
+            Message = $"If a matching verified account was found, an email was sent to {req.Email} to allow you to reset your password."
+        };
+        return Ok(msg);
+    }
+
+    [HttpPost("reset-password")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MessageResponse))]
+    public async Task<ActionResult<MessageResponse>> ResetPassword(ResetPasswordRequest req)
+    {
+        await _authenticationService.ResetPassword(req.Password, req.UserId, req.Token);
+        return Ok(new MessageResponse() { Message = "Password reset successfully."});
+    }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using TrainingApp.Data;
 using TrainingApp.Features.Authentication;
+using TrainingApp.Features.Mail;
 using TrainingApp.Features.Trainings;
 using TrainingApp.Features.Trainings.FixedDrills;
 using TrainingApp.Middleware;
@@ -41,6 +42,8 @@ builder.Services.AddTransient<GlobalExceptionMiddlewareHandler>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ITrainingService, TrainingService>();
 builder.Services.AddScoped<IFixedDrillsService, FixedDrillsService>();
+
+builder.Services.AddScoped<IMailService, MailService>();
 
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<DataContext>(opt
     => opt.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING")));
