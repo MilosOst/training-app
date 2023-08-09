@@ -47,7 +47,7 @@ namespace TrainingApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PasswordResetTokens");
+                    b.ToTable("PasswordResetTokens", (string)null);
                 });
 
             modelBuilder.Entity("TrainingApp.Features.Authentication.Models.UserSession", b =>
@@ -63,7 +63,7 @@ namespace TrainingApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserSessions");
+                    b.ToTable("UserSessions", (string)null);
                 });
 
             modelBuilder.Entity("TrainingApp.Features.Trainings.FixedDrills.FixedDrill", b =>
@@ -86,7 +86,10 @@ namespace TrainingApp.Migrations
 
                     b.HasKey("FixedDrillId");
 
-                    b.ToTable("FixedDrills");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("FixedDrills", (string)null);
                 });
 
             modelBuilder.Entity("TrainingApp.Features.Trainings.UserTraining", b =>
@@ -113,7 +116,7 @@ namespace TrainingApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserTraining");
+                    b.ToTable("UserTraining", (string)null);
                 });
 
             modelBuilder.Entity("TrainingApp.Features.Trainings.UserTrainingDrills.UserTrainingDrill", b =>
@@ -140,7 +143,7 @@ namespace TrainingApp.Migrations
 
                     b.HasIndex("UserTrainingId");
 
-                    b.ToTable("UserTrainingDrills");
+                    b.ToTable("UserTrainingDrills", (string)null);
                 });
 
             modelBuilder.Entity("TrainingApp.Features.Users.User", b =>
@@ -173,7 +176,7 @@ namespace TrainingApp.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("TrainingApp.Features.Authentication.Models.PasswordResetToken", b =>

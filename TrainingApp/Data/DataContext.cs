@@ -20,12 +20,14 @@ public class DataContext: DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
+        optionsBuilder.EnableSensitiveDataLogging();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserEntityTypeConfiguration).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(FixedDrillEntityTypeConfiguration).Assembly);
         
         var converter = new EnumToStringConverter<AgeGroup>();
 
@@ -33,13 +35,6 @@ public class DataContext: DbContext
             .Entity<UserTraining>()
             .Property(e => e.Age)
             .HasConversion(converter);
-        
-        var converter2 = new EnumToStringConverter<Category>();
-
-        modelBuilder
-            .Entity<FixedDrill>()
-            .Property(e => e.Category)
-            .HasConversion(converter2);
     }
     
 

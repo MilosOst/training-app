@@ -12,8 +12,8 @@ using TrainingApp.Data;
 namespace TrainingApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230809010120_PasswordResetToken")]
-    partial class PasswordResetToken
+    [Migration("20230809191552_PasswordReset")]
+    partial class PasswordReset
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -88,6 +88,9 @@ namespace TrainingApp.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("FixedDrillId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("FixedDrills");
                 });
