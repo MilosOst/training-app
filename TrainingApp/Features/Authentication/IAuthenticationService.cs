@@ -26,6 +26,11 @@ public interface IAuthenticationService
     /// <param name="newPassword">New password to use</param>
     /// <param name="userId">User Id</param>
     /// <param name="resetToken">Reset token provided when password reset was requested</param>
-    /// <returns></returns>
     Task ResetPassword(string newPassword, Guid userId, string resetToken);
+
+    /// <summary>
+    /// Invalidate the session with the provided sessionId
+    /// </summary>
+    /// <param name="sessionId">Id of Session to invalidate</param>
+    Task CloseSession(string sessionId);
 }

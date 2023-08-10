@@ -13,4 +13,14 @@ public static class HttpContextExtensions
     {
         return context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
     }
+
+    /// <summary>
+    /// Return the currently authenticated user's sessionId. Do not use if user is not logged in.
+    /// </summary>
+    /// <param name="context">Current HttpContext</param>
+    /// <returns>sessionId of current user</returns>
+    public static string GetSessionId(this HttpContext context)
+    {
+        return context.User.Claims.First(c => c.Type == "SessionId").Value!;
+    }
 }

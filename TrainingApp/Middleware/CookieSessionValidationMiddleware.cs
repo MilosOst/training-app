@@ -37,7 +37,10 @@ public class CookieSessionValidationMiddleware: CookieAuthenticationEvents
         }
         
         var userIdClaim = new Claim(ClaimTypes.NameIdentifier, session.UserId.ToString());
+        var sessionIdClaim = new Claim("SessionId", session.SessionId.ToString());
+        
         ((ClaimsIdentity) (context.Principal.Identity)).AddClaim(userIdClaim);
+        ((ClaimsIdentity) (context.Principal.Identity)).AddClaim(sessionIdClaim);
     }
     
     public override async Task RedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)

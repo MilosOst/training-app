@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TrainingApp.APIResponses;
+using TrainingApp.Extensions;
 using TrainingApp.Features.Authentication.Models;
 
 namespace TrainingApp.Features.Authentication;
@@ -73,4 +74,18 @@ public class AuthenticationController: ControllerBase
         await _authenticationService.ResetPassword(req.Password, req.UserId, req.Token);
         return Ok(new MessageResponse() { Message = "Password reset successfully."});
     }
+
+    [Authorize]
+    [HttpPost("log-out")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MessageResponse))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(MessageResponse))]
+    public async Task<ActionResult<MessageResponse>> LogOut()
+    {
+        await _authenticationService.CloseSession(HttpContext.GetSessionId());
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        
+        return Ok(new MessageResponse() { Message = "You have successfully logged out."});
+    }
+    
+    
 }

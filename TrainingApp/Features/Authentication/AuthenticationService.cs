@@ -150,4 +150,10 @@ public class AuthenticationService: IAuthenticationService
         await _db.UserSessions.Where(u => u.UserId == userId).ExecuteDeleteAsync();
         await _db.SaveChangesAsync();
     }
+
+    public async Task CloseSession(string sessionId)
+    {
+        await _db.UserSessions.Where(s => s.SessionId.ToString() == sessionId).ExecuteDeleteAsync();
+        await _db.SaveChangesAsync();
+    }
 }
